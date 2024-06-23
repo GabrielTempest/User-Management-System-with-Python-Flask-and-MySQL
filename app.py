@@ -10,8 +10,8 @@ app.secret_key = "Belajar membuat User Management System"
 
 
 app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = ""
+app.config["MYSQL_USER"] = "Ganiel"
+app.config["MYSQL_PASSWORD"] = "Rimuru"
 app.config["MYSQL_DB"] = "ums"
 
 
@@ -26,7 +26,8 @@ def login():
     if request.method == "POST" and "email" in request.form and "password" in request.form:
         email = request.form["email"]
         password = request.form["password"]
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = mysql.connect()
+        cursor.cursor()
         cursor.execute(
             "SELECT * FROM user WHERE email=%s and password=%s", (email, password, ))
         user = cursor.fetchone()
@@ -56,7 +57,8 @@ def register():
         password = request.form["password"]
         role = request.form["role"]
         country = request.form["country"]
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = mysql.connect()
+        cursor.cursor()
         cursor.execute("SELECT * FROM user WHERE email=%s", (email, ))
 
         account = cursor.fetchone()
@@ -81,7 +83,8 @@ def register():
 @app.route("/users", methods=["GET", "POST"])
 def users():
     if "loggedin" in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = mysql.connect()
+        cursor.cursor()
         cursor.execute("SELECT * FROM user")
         users = cursor.fetchall()
         return render_template("users.html", users=users)
@@ -99,7 +102,8 @@ def logout():
 def view():
     if "loggedin" in session:
         viewUserId = request.args.get("userid")
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = mysql.connect()
+        cursor.cursor()
         cursor.execute("SELECT * FROM user WHERE userid=%s", (viewUserId, ))
 
         user = cursor.fetchone()
@@ -114,7 +118,8 @@ def edit():
 
     if "loggedin" in session:
         editUserId = request.args.get("userid")
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = mysql.connect()
+        cursor.cursor()
         cursor.execute("SELECT * FROM user WHERE userid=%s", (editUserId, ))
         editUser = cursor.fetchone()
 
@@ -157,7 +162,8 @@ def password_change():
             elif password != confirm_pass:
                 mesage = 'Konfirmasi Password Tidak Sama . . .'
             else:
-                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor = mysql.connect()
+                cursor.cursor()
                 cursor.execute(
                     'UPDATE user SET  password =% s WHERE userid =% s', (password, (userId, ), ))
                 mysql.connection.commit()
